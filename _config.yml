@@ -1,0 +1,3 @@
+url: http://127.0.0.1/uni/matheprisma-responsive/_site/
+permalink: /module/:title.html
+exclude: modules, bootstrap, README.md, Makefile

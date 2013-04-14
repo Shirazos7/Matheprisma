@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>{% if page.title %} {{ page.title }} | {% endif %}Matheprisma Responsive</title>
+		<link rel="stylesheet" href="{{ site.url }}/css/main.css" />
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+		 		
+		 		<div class="span4">
+					<header>
+						<h1>Matheprisma Responsive</h1>
+					<header>
+
+					<nav role="navigation">
+						<ul>
+							<li><a href="{{ site.url }}">Home</a></li>
+						</ul>
+					</nav>
+				</div>
+
+				<div class="span8">
+					{{ content }}
+
+					<footer>
+						<p>&copy; 2013 <a href="https://github.com/t-visualappeal/matheprisma-responsive">Tim Helfensdörfer</a></p>
+					</footer>
+				</div>
+		 
+			</div>
+		</div>
+
+		<script src="{{ site.url }}/js/jquery-1.9.1.min.js"></script>
+		<script src="{{ site.url }}/js/bootstrap.min.js"></script>
+		<script src="{{ site.url }}/js/underscore.min.js"></script>
+
+		<script src="{{ site.url }}/js/main.min.js"></script>
+	</body>
+</html>
