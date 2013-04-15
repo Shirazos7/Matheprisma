@@ -1,4 +1,4 @@
-MazeCell = function(top, right, bottom, left, x, y) {
+function MazeCell(top, right, bottom, left, x, y) {
 	this.top = top;
 	this.right = right;
 	this.bottom = bottom;
@@ -9,29 +9,65 @@ MazeCell = function(top, right, bottom, left, x, y) {
 
 	this.frontier = false;
 	this.visited = false;
+}
+
+var MazeController = {
+	mazes: [],
+
+	create: function(element, rowCount, torch, type) {
+		var theMaze = new Maze(element, rowCount, torch, type);
+		this.mazes.push(theMaze);
+
+		return theMaze;
+	},
+
+	stopAll: function() {
+		console.log('stop all');
+		for (var i = 0; i < this.mazes.length; i++) {
+			this.mazes[i].stop();
+		}
+	},
+
+	unbindKeys: function() {
+		console.log('unbind keys');
+		$('body').unbind('keydown');
+	}
 };
 
-Maze = function(element) {
-	this.context = element.getContext('2d');
+function Maze(element, rowCount, torch, type) {
+	this.element = element;
+	this.context = this.element.getContext('2d');
 
 	this.status = 'reset';
+	this.type = type; //random | manual
 
-	element.width = $(element).parent().width();
-	element.height = $(element).width();
+	this.element.width = $(this.element).parent().width();
+	this.element.height = $(this.element).width();
 
 	this.colorBackground = 'rgb(255, 255, 255)';
+	this.colorTorchBackground = 'rgb(50, 50, 50)';
 	this.colorWall = 'rgb(255, 255, 255)';
 	this.colorExit = 'rgb(175, 255, 175)';
 	this.colorPlayer = 'rgb(255, 50, 50)';
 
 	this.wallWidth = 0.5;
 
-	this.rowCount = 30;
+	this.rowCount = rowCount;
+	this.torch = torch;
 	this.squareSize = (element.width / this.rowCount);
 	this.squares = [];
 
 	this.player = [0, 0];
 	this.end = [0, 0];
+
+	this.selectorStart = false;
+	this.selectorStop = false;
+	this.selectorReset = false;
+
+	this.keyUp = 38;
+	this.keyRight = 39;
+	this.keyDown = 40;
+	this.keyLeft = 37;
 
 	this.createEnd = function() {
 		//x coordinate
@@ -209,6 +245,23 @@ Maze = function(element) {
 	};
 
 	this.draw = function() {
+		if (this.torch) {
+			this.context.fillStyle = this.colorTorchBackground;
+			this.context.fillRect(0, 0, element.width, element.height);
+			this.context.save();
+
+			this.context.beginPath();
+			this.context.arc(
+				this.player[0] * this.squareSize,
+				this.player[1] * this.squareSize,
+				(this.squareSize * this.rowCount / 7),
+				0,
+				2 * Math.PI
+			);
+			this.context.clip();
+		}
+
+		this.context.beginPath();
 		this.context.fillStyle = this.colorBackground;
 		this.context.fillRect(0, 0, element.width, element.height);
 
@@ -235,6 +288,9 @@ Maze = function(element) {
 		}
 
 		this.drawPlayer(this.player[0], this.player[1], this.colorPlayer);
+
+		if (this.torch)
+			this.context.restore();
 	};
 
 	this.firstWalk = function(x, y) {
@@ -356,28 +412,149 @@ Maze = function(element) {
 		}
 	};
 
-	this.startRandom = function() {
-		this.status = 'start';
+	this.walk = function(direction) {
+		var canWalk = false;
 
-		this.walkRandom(null);
+		var x = this.player[0];
+		var y = this.player[1];
+
+		switch (direction) {
+			case 'up':
+				if (this.squares[x][y - 1] && this.squares[x][y].top === false) {
+					this.player[0] = x;
+					this.player[1] = y - 1;
+					canWalk = true;
+				}
+
+				break;
+			case 'right':
+				if (this.squares[x + 1] && this.squares[x + 1][y] && this.squares[x][y].right === false) {
+					this.player[0] = x + 1;
+					this.player[1] = y;
+					canWalk = true;
+				}
+
+				break;
+			case 'down':
+				if (this.squares[x][y + 1] && this.squares[x][y].bottom === false) {
+					this.player[0] = x;
+					this.player[1] = y + 1;
+					canWalk = true;
+				}
+
+				break;
+			case 'left':
+				if (this.squares[x - 1] && this.squares[x - 1][y] && this.squares[x][y].left === false) {
+					this.player[0] = x - 1;
+					this.player[1] = y;
+					canWalk = true;
+				}
+
+				break;
+		}
+
+		if (canWalk)
+			this.draw();
+
+		return canWalk;
+	};
+
+	this.walkUp = function() {
+		this.walk('up');
+	};
+
+	this.walkRight = function() {
+		this.walk('right');
+	};
+
+	this.walkDown = function() {
+		this.walk('down');
+	};
+
+	this.walkLeft = function() {
+		this.walk('left');
+	};
+
+	this.start = function() {
+		var _this = this;
+
+		switch (this.type) {
+			case 'random':
+				this.status = 'start';
+				this.walkRandom(null);
+				break;
+			case 'manual':
+				MazeController.stopAll();
+
+				this.status = 'start';
+
+				console.log('bind');
+
+				$('body').keydown(function(e) {
+					console.log('keydown', e);
+					switch (e.keyCode) {
+						case _this.keyUp:
+							_this.walkUp();
+							break;
+						case _this.keyRight:
+							_this.walkRight();
+							break;
+						case _this.keyDown:
+							_this.walkDown();
+							break;
+						case _this.keyLeft:
+							_this.walkLeft();
+							break;
+					}
+
+					if (e.keyCode === _this.keyUp ||
+						e.keyCode === _this.keyRight ||
+						e.keyCode === _this.keyDown ||
+						e.keyCode === _this.keyLeft) {
+
+						e.preventDefault();
+						return false;
+					}
+				});
+				break;
+		}
+
+		$(this.selectorStart).addClass('disabled');
+
+		if (this.selectorStop)
+			$(this.selectorStop).removeClass('disabled');
 	};
 
 	this.stop = function() {
 		this.status = 'stop';
+
+		MazeController.unbindKeys();
+
+		if (this.selectorStart)
+			$(this.selectorStart).removeClass('disabled');
+
+		$(this.selectorStop).addClass('disabled');
 	};
 
 	this.reset = function() {
 		this.init();
 		this.status = 'reset';
+
+		if (this.selectorStart)
+			$(this.selectorStart).removeClass('disabled');
+
+		if (this.selectorStop)
+			$(this.selectorStop).addClass('disabled');
 	};
 
 	this.init = function() {
+		var _this = this;
 		var top = true;
 		var right = true;
 		var bottom = true;
 		var left = true;
 
-		//Init maze
+		//Init fields
 		for (var x = 0; x < this.rowCount; x++) {
 			this.squares[x] = [];
 			for (var y = 0; y < this.rowCount; y++) {
@@ -387,46 +564,64 @@ Maze = function(element) {
 
 		this.setPlayer();
 		this.createMaze();
+
+		//Set controls
+		if (this.selectorStart !== false) {
+			$(this.selectorStart).on('click', function() {
+				_this.start();
+			});
+		}
+
+		if (this.selectorStop !== false) {
+			$(this.selectorStop).on('click', function() {
+				_this.stop();
+			});
+		}
+
+		if (this.selectorReset !== false) {
+			$(this.selectorReset).on('click', function() {
+				_this.reset();
+			});
+		}
+
 		this.draw();
 	};
-
-	this.init();
-};
+}
 
 $(function() {
-	var eZufall = $('#experiment-labyrinth-zufall').get(0);
+	var eRandom = $('#experiment-labyrinth-random').get(0);
 
-	if (eZufall.getContext) {
-		console.log('Experiment: Zufall');
-		var eZufallMaze = new Maze(eZufall);
+	var eManual = $('#experiment-labyrinth-manual').get(0);
 
-		$('#experiment-labyrinth-zufall-start').on('click', function() {
-			$('#experiment-labyrinth-zufall-start').addClass('disabled');
+	var eSmall = $('#experiment-labyrinth-small').get(0);
 
-			console.log('Start: Zufall');
-			eZufallMaze.startRandom(function(err) {
-				//Finished
-				if (!err) {
-					$('#experiment-labyrinth-zufall-start').removeClass('disabled');
-					$('#experiment-labyrinth-zufall-stop').addClass('disabled');
-				}
-			});
+	if (eRandom.getContext) {
+		var eRandomMaze = MazeController.create(eRandom, 30, false, 'random');
 
-			$('#experiment-labyrinth-zufall-stop').removeClass('disabled');
-		});
+		eRandomMaze.selectorStart = '#experiment-labyrinth-random-start';
+		eRandomMaze.selectorStop = '#experiment-labyrinth-random-stop';
+		eRandomMaze.selectorReset = '#experiment-labyrinth-random-reset';
 
-		$('#experiment-labyrinth-zufall-stop').on('click', function() {
-			console.log('Stop: Zufall');
-			eZufallMaze.stop();
-			$('#experiment-labyrinth-zufall-start').removeClass('disabled');
-			$('#experiment-labyrinth-zufall-stop').addClass('disabled');
-		});
+		eRandomMaze.init();
+	}
 
-		$('#experiment-labyrinth-zufall-reset').on('click', function() {
-			console.log('Reset: Zufall');
-			eZufallMaze.reset();
-			$('#experiment-labyrinth-zufall-start').removeClass('disabled');
-			$('#experiment-labyrinth-zufall-stop').addClass('disabled');
-		});
+	if (eManual.getContext) {
+		var eManualMaze = MazeController.create(eManual, 30, true, 'manual');
+
+		eManualMaze.selectorStart = '#experiment-labyrinth-manual-start';
+		eManualMaze.selectorStop = '#experiment-labyrinth-manual-stop';
+		eManualMaze.selectorReset = '#experiment-labyrinth-manual-reset';
+
+		eManualMaze.init();
+	}
+
+	if (eSmall.getContext) {
+		var eSmallMaze = MazeController.create(eSmall, 15, true, 'manual');
+
+		eSmallMaze.selectorStart = '#experiment-labyrinth-small-start';
+		eSmallMaze.selectorStop = '#experiment-labyrinth-small-stop';
+		eSmallMaze.selectorReset = '#experiment-labyrinth-small-reset';
+
+		eSmallMaze.init();
 	}
 });
