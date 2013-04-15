@@ -1,2 +1,3 @@
+url: http://t-visualappeal.github.io/matheprisma-responsive
 permalink: /module/:title.html
 exclude: modules, bootstrap, README.md, Makefile, config
