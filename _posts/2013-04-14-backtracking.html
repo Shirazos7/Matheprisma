@@ -3,107 +3,82 @@ layout: module
 title: Backtracking
 ---
 
-<h3>Das Labyrinth (1/3)</h3>
+<h3 id="labyrinth">Das Labyrinth</h3>
 
-<div class="row experiment">
-	<div class="meta span2">
-		<h4>Der Zufalls-Held</h4>
-	</div>
+<div class="panel">
+	<div class="panel-heading"><h4>Der Zufalls-Held</h4></div>
 
-	<div class="span6">
-		<p>
-			Unser Held - ein roter Punkt - muss aus dem Labyrinth entkommen. Der Held ist nicht schlau, aber ausdauernd. An jeder Kreuzung entscheidet er einfach per Zufall, wie er weitergeht.
-		</p>
+	<p>
+		Unser Held - ein roter Punkt - muss aus dem Labyrinth entkommen. Der Held ist nicht schlau, aber ausdauernd. An jeder Kreuzung entscheidet er einfach per Zufall, wie er weitergeht.
+	</p>
 
-		<canvas id="experiment-labyrinth-random" class="labyrinth">
-		</canvas>
+	<canvas id="experiment-labyrinth-random" class="labyrinth">
+	</canvas>
 
-		<p>
-			<a class="btn btn-primary" id="experiment-labyrinth-random-start"><i class="icon-play icon-white"></i> Start</a>
-			<a class="btn btn-danger disabled" id="experiment-labyrinth-random-stop"><i class="icon-stop icon-white"></i> Stop</a>
-			<a class="btn" id="experiment-labyrinth-random-reset"><i class="icon-repeat"></i> Neu</a>
-		</p>
+	<p>
+		<a class="btn btn-primary" id="experiment-labyrinth-random-start"><i class="icon-play icon-white"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-random-stop"><i class="icon-stop icon-white"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-random-reset"><i class="icon-repeat"></i> Neu</a>
+	</p>
 
-		<p>
-			Ob das zum Ziel ( = Ausgang ) führt? Überlasse den Zufall-Helden seinem Schicksal. Du kannst ja nochmals nach ihm sehen, wenn du diese Seite durchgearbeitet hast.
-		</p>
-	</div>
+	<p>
+		Ob das zum Ziel ( = Ausgang ) führt? Überlasse den Zufall-Helden seinem Schicksal. Du kannst ja nochmals nach ihm sehen, wenn du diese Seite durchgearbeitet hast.
+	</p>
 </div>
 
-<div class="row experiment">
-	<div class="meta span2">
-		<h4>Du bist der Held</h4>
-	</div>
+<div class="panel">
+	<div class="panel-heading"><h4>Du bist der Held</h4></div>
 
-	<div class="span6">
-		<a name="labyrinth-random"></a>
-		<p>
-			Hier kannst du per Pfeiltasten den Helden immer bis zur nächsten Kurve oder Kreuzung fortbewegen. Sicher bist du schneller am Ausgang als der Zufall-Held.
-		</p>
+	<a name="labyrinth-random"></a>
+	<p>
+		Hier kannst du per Pfeiltasten den Helden immer bis zur nächsten Kurve oder Kreuzung fortbewegen. Sicher bist du schneller am Ausgang als der Zufall-Held.
+	</p>
 
-		<canvas id="experiment-labyrinth-manual" class="labyrinth">
-		</canvas>
+	<canvas id="experiment-labyrinth-manual" class="labyrinth">
+	</canvas>
 
-		<p>
-			<a class="btn btn-primary" id="experiment-labyrinth-manual-start"><i class="icon-play icon-white"></i> Start</a>
-			<a class="btn btn-danger disabled" id="experiment-labyrinth-manual-stop"><i class="icon-stop icon-white"></i> Stop</a>
-			<a class="btn" id="experiment-labyrinth-manual-reset"><i class="icon-repeat"></i> Neu</a>
-		</p>
-	</div>
+	<p>
+		<a class="btn btn-primary" id="experiment-labyrinth-manual-start"><i class="icon-play icon-white"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-manual-stop"><i class="icon-stop icon-white"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-manual-reset"><i class="icon-repeat"></i> Neu</a>
+	</p>
 </div>
 
-<div class="row question">
-	<div class="span8">
-		<p>
-			Hand aufs Herz: Warum warst du besser als der Zufall-Held?
-		</p>
+<div class="panel panel-info">
+	<div class="panel-heading">Hand aufs Herz: Warum warst du besser als der Zufall-Held?</div>
+	<ul>
+		<li>Ich wusste, wo der Ausgang liegt.</li>
+		<li>Ich konnte mir immer merken, wo ich schon war.</li>
+		<li>Ich habe weiter als bis zur nächsten Kreuzung geplant.</li>
+	</ul>
 
-		<ul class="questions">
-			<li>Ich wusste, wo der Ausgang liegt.</li>
-			<li>Ich konnte mir immer merken, wo ich schon war.</li>
-			<li>Ich habe weiter als bis zur nächsten Kreuzung geplant.</li>
-		</ul>
-
-		<p>
-			Du hattest entscheidende Informationen: du kanntest den Plan des Labyrinths und wusstest zu jedem Zeitpunkt, wo auf dem Plan du dich befindest. Das ist doch eher untypisch.
-		</p>
-	</div>
+	<p>
+		Du hattest entscheidende Informationen: du kanntest den Plan des Labyrinths und wusstest zu jedem Zeitpunkt, wo auf dem Plan du dich befindest. Das ist doch eher untypisch.
+	</p>
 </div>
 
-<div class="alert alert-info">
-	<strong>Der wahre Held hat keinen Plan.</strong>
-</div>
+<div class="panel">
+	<div class="panel-heading"><h4>Das Labyrinth ist kleiner</h4></div>
 
-<div class="row experiment">
-	<div class="meta span2">
-		<h4>Das Labyrinth ist kleiner</h4>
-	</div>
+	<p>
+		Führe den Helden wieder mit den Pfeiltasten aus dem Labyrinth. Deine Sicht ist diesmal auf Fackel-Leuchtweite eingeschränkt.
+	</p>
 
-	<div class="span6">
-		<p>
-			Führe den Helden wieder mit den Pfeiltasten aus dem Labyrinth. Deine Sicht ist diesmal auf Fackel-Leuchtweite eingeschränkt.
-		</p>
+	<canvas id="experiment-labyrinth-small" class="labyrinth">
+	</canvas>
 
-		<canvas id="experiment-labyrinth-small" class="labyrinth">
-		</canvas>
-
-		<p>
-			<a class="btn btn-primary" id="experiment-labyrinth-small-start"><i class="icon-play icon-white"></i> Start</a>
-			<a class="btn btn-danger disabled" id="experiment-labyrinth-small-stop"><i class="icon-stop icon-white"></i> Stop</a>
-			<a class="btn" id="experiment-labyrinth-small-reset"><i class="icon-repeat"></i> Neu</a>
-		</p>
-
-		<p>
-			Ob das zum Ziel ( = Ausgang ) führt? Überlasse den Zufall-Helden seinem Schicksal. Du kannst ja nochmals nach ihm sehen, wenn du diese Seite durchgearbeitet hast.
-		</p>
-	</div>
+	<p>
+		<a class="btn btn-primary" id="experiment-labyrinth-small-start"><i class="icon-play icon-white"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-small-stop"><i class="icon-stop icon-white"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-small-reset"><i class="icon-repeat"></i> Neu</a>
+	</p>
 </div>
 
 <p>
 	Das war jetzt nicht mehr ganz so einfach. Auf der nächsten Seite wollen wir eine Systematik für den wahren Helden finden. Willst du zuvor noch kurz nach dem <a href="#labyrinth-random">Zufall-Held</a> sehen? <a class="help" data-title="Labyrinth und Zufall" data-content="So ganz schlecht ist die Zufallsstrategie doch nicht: Mit den Mitteln der Stochastik ('random walks') kann man nämlich zeigen, dass die Wahrscheinlichkeit, irgendwann einmal den Ausgang zu erreichen, gleich 1 ist! In unserem Beispiel dauert es eigentlich nie mehr als 10 Minuten.">Überrascht</a>?
 </p>
 
-<h4>Über das Modul</h4>
+<h4 class="module-about">Über das Modul</h4>
 
 <ul>
 	<li>Algorithmus zum erstellen des Labyrinths: <a href="http://en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_Prim.27s_algorithm">Prim Algorithmus</a></li>

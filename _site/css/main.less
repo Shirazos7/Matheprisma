@@ -1,24 +1,36 @@
 @import "bootstrap/less/bootstrap.less";
-@import "bootstrap/less/responsive.less";
 
-#content {
-	h4 {
-		margin-top: 15px;
+header {
+	margin-bottom: 40px;
+
+	h1 {
+		margin: 0;
 	}
 }
 
-.experiment {
-	margin-top: 30px;
-	margin-bottom: 30px;
+.affix {
+	position: fixed;
+}
 
-	&:last-child {
-		margin-bottom: 0;
+.module {
+	h3 {
+		margin-top: 0;
 	}
 
-	.meta {
-		h4 {
-			margin-top: 0!important;
-		}
+	.module-about {
+		margin-top: 20px;
+	}
+}
+
+.anchor {
+	color: @text-color;
+	text-decoration: none;
+}
+
+.panel-heading {
+	h3, h4 {
+		margin-top: 0;
+		margin-bottom: 0;
 	}
 }
 

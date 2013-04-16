@@ -1,6 +1,15 @@
 ---
 layout: default
 ---
-<h2>{{ page.title }}</h2>
+	 		
+<div class="col-span-4">
+	<ul role="navigation" class="nav nav-pills nav-stacked nav-module">
+		<li class="nav-header">
+			{{ page.title }}
+		</li>
+	</ul>
+</div>
 
-{{ content }}
+<div class="col-span-8 module">
+	{{ content }}
+</div>

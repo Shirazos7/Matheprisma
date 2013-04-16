@@ -4,33 +4,56 @@
 		<meta charset="utf-8" />
 		<title>{% if page.title %} {{ page.title }} | {% endif %}Matheprisma Responsive</title>
 		<link rel="stylesheet" href="{{ site.url }}/css/main.css" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-		<div class="container">
-			<div class="row">
-		 		
-		 		<div class="span4">
-					<header>
-						<h1>Matheprisma Responsive</h1>
-					<header>
+		<header>
+			<div class="navbar">
+				<div class="container">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
 
-					<nav role="navigation">
-						<ul>
-							<li><a href="{{ site.url }}">Home</a></li>
+					<h1><a class="navbar-brand" href="{{ site.url }}">Matheprisma</a></h1>
+
+					<div class="nav-collapse collapse navbar-responsive-collapse">
+						<ul class="nav" role="navigation">
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Mittelstufe <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li></li>
+								</ul>
+							</li>
+
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Oberstufe <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li></li>
+								</ul>
+							</li>
+
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Studium <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a href="{{ site.url }}/module/backtracking.html">Backtracking</a></li>
+								</ul>
+							</li>
 						</ul>
-					</nav>
+					</div>
 				</div>
-
-				<div class="span8" id="content">
-					{{ content }}
-
-					<footer>
-						<p>&copy; 2013 <a href="https://github.com/t-visualappeal/matheprisma-responsive">Tim Helfensdörfer</a></p>
-					</footer>
-				</div>
-		 
 			</div>
+		</header>
+
+		<div class="container">
+			{{ content }}
 		</div>
+
+		<footer role="contentinfo" class="container">
+			<p>&copy; 2013 <a href="https://github.com/t-visualappeal/matheprisma-responsive">Tim Helfensdörfer</a></p>
+		</footer>
 
 		<script src="{{ site.url }}/js/jquery-1.9.1.min.js"></script>
 		<script src="{{ site.url }}/js/bootstrap.min.js"></script>

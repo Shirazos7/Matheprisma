@@ -4,10 +4,14 @@ layout: default
 
 <h2>Übersicht der Module</h2>
 
-<ul class="modules unstyled">
+<ul class="modules list-unstyled">
 	{% for post in site.posts %}
 		<li class="module-entry">
-			<a href="{{ site.url }}{{ post.url }}"><h3>{{ post.title }}</h3></a>
+			<div class="panel">
+				<div class="panel-heading"><h3><a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a></h3></div>
+				Das Verfahren des Backtrackings wird anhand der Sage von Theseus, der mit Hilfe des Ariadne-Fadens aus dem Labyrinth entkommt, motiviert und allgemein hergeleitet.
+Anschließend wird Backtracking auf das n-Damen-Problem und das Spiel Quinto angewendet.
+			</div>
 		</li>
 	{% endfor %}
 </ul>
