@@ -39,14 +39,12 @@ var MazeController = {
 	},
 
 	stopAll: function() {
-		console.log('stop all');
 		for (var i = 0; i < this.mazes.length; i++) {
 			this.mazes[i].stop();
 		}
 	},
 
 	unbindKeys: function() {
-		console.log('unbind keys');
 		$('body').unbind('keydown');
 	}
 };
@@ -55,7 +53,7 @@ function Maze(element, rowCount, type) {
 	this.element = element;
 	this.context = this.element.getContext('2d');
 
-	this.status = 'reset';
+	this.status = 'reset'; //start | stop | reset | finish
 	this.type = type; //random | manual | backtracking
 
 	this.element.width = $(this.element).parent().width();
@@ -296,7 +294,7 @@ function Maze(element, rowCount, type) {
 	};
 
 	this.draw = function() {
-		if (this.torch) {
+		if (this.torch === true && this.status !== 'finish') {
 			this.context.fillStyle = this.colorTorchBackground;
 			this.context.fillRect(0, 0, element.width, element.height);
 			this.context.save();
@@ -343,7 +341,7 @@ function Maze(element, rowCount, type) {
 
 		this.drawPlayer(this.player[0], this.player[1], this.colorPlayer);
 
-		if (this.torch) {
+		if (this.torch === true && this.status !== 'finish') {
 			this.context.restore();
 		}
 	};
@@ -503,7 +501,7 @@ function Maze(element, rowCount, type) {
 			var next = false;
 
 			if (this.player[0] === this.end[0] && this.player[1] === this.end[1]) {
-				this.status = 'stop';
+				this.finish();
 				return;
 			}
 
@@ -535,8 +533,6 @@ function Maze(element, rowCount, type) {
 	};
 
 	this.walkBacktracking = function() {
-		console.log('walk backtracking');
-
 		if (this.status === 'start') {
 			var _this = this;
 			var next = false;
@@ -545,7 +541,7 @@ function Maze(element, rowCount, type) {
 			var string = false;
 
 			if (x === this.end[0] && y === this.end[1]) {
-				this.status = 'stop';
+				this.finish();
 				return;
 			}
 
@@ -634,6 +630,11 @@ function Maze(element, rowCount, type) {
 		var xNext = false;
 		var yNext = false;
 
+		if (x === this.end[0] && y === this.end[1]) {
+			this.finish();
+			return;
+		}
+
 		switch (direction) {
 			case 'up':
 				if (this.squares[x][y - 1] && this.squares[x][y].top === false) {
@@ -712,10 +713,7 @@ function Maze(element, rowCount, type) {
 
 				this.status = 'start';
 
-				console.log('bind');
-
 				$('body').keydown(function(e) {
-					console.log('keydown', e);
 					switch (e.keyCode) {
 						case _this.keyUp:
 							_this.walkUp();
@@ -751,6 +749,12 @@ function Maze(element, rowCount, type) {
 
 		if (this.selectorStop)
 			$(this.selectorStop).removeClass('disabled');
+	};
+
+	this.finish = function() {
+		this.status = 'finish';
+		this.draw();
+		MazeController.unbindKeys();
 	};
 
 	this.stop = function() {

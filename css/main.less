@@ -1,4 +1,5 @@
 @import "bootstrap/less/bootstrap.less";
+@import "jquery-ui-1.10.2.custom.min.css";
 
 header {
 	margin-bottom: 40px;
@@ -36,6 +37,34 @@ header {
 
 .help {
 	cursor: help;
+}
+
+.answer-drag, .question-drop {
+	li {
+		padding: 4px;
+		border: 1px solid @grayLighter;
+	}
+}
+
+.answer-drag {
+	li {
+		display: inline;
+		background-color: @brand-info;
+		color: @body-bg;
+		cursor: pointer;
+	}
+}
+
+.question-drop {
+	li {
+		margin-bottom: 10px;
+
+		li {
+			background-color: @brand-primary;
+			color: @body-bg;
+			border: none;
+		}
+	}
 }
 
 footer {
