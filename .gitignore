@@ -1,1 +1,4 @@
+# Project files
+*.sublime-*
+
 config/*

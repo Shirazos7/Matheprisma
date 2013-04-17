@@ -128,11 +128,79 @@
 	</p>
 </div>
 
-<p>
-	Das war jetzt nicht mehr ganz so einfach. Auf der nächsten Seite wollen wir eine Systematik für den wahren Helden finden. Willst du zuvor noch kurz nach dem <a href="#labyrinth-random">Zufall-Held</a> sehen? <a class="help" data-title="Labyrinth und Zufall" data-content="So ganz schlecht ist die Zufallsstrategie doch nicht: Mit den Mitteln der Stochastik ('random walks') kann man nämlich zeigen, dass die Wahrscheinlichkeit, irgendwann einmal den Ausgang zu erreichen, gleich 1 ist! In unserem Beispiel dauert es eigentlich nie mehr als 10 Minuten.">Überrascht</a>?
-</p>
+<div class="panel">
+	<div class="panel-heading"><h4>Das war jetzt nicht mehr ganz so einfach</h4></div>
 
-<h4 class="module-about">Über das Modul</h4>
+	Willst du zuvor noch kurz nach dem <a href="#labyrinth-random">Zufall-Held</a> sehen? <a class="help" data-title="Labyrinth und Zufall" data-content="So ganz schlecht ist die Zufallsstrategie doch nicht: Mit den Mitteln der Stochastik ('random walks') kann man nämlich zeigen, dass die Wahrscheinlichkeit, irgendwann einmal den Ausgang zu erreichen, gleich 1 ist! In unserem Beispiel dauert es eigentlich nie mehr als 10 Minuten.">Überrascht</a>?
+</div>
+
+<div class="panel panel-info">
+	Der wahre Held braucht ein gute Systematik, die wir jetzt entwickeln. Dazu statten wir den Helden erst einmal mit Kreide aus. Damit malt er jedes begangene Feld im Labyrinth an.
+</div>
+
+<div class="panel">
+	<div class="panel-heading"><h4>Wird es jetzt einfacher, den Helden aus dem Labyrinth zu führen?</h4></div>
+
+	<canvas id="experiment-labyrinth-chalk" class="labyrinth">
+	</canvas>
+
+	<p>
+		<a class="btn btn-primary" id="experiment-labyrinth-chalk-start"><i class="icon-play icon-white"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-chalk-stop"><i class="icon-stop icon-white"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-chalk-reset"><i class="icon-repeat"></i> Neu</a>
+	</p>
+
+	Klar, mit den Markierungen weiß man, wo man überall schon war. Um zu vermeiden, dass man im Kreis geht, versucht man immer, auf noch nicht markierte Felder zu gehen.
+</div>
+
+<div class="panel panel-warning">
+	Es kann vorkommen, dass man gar keine Wahl hat und ein markiertes Feld nochmals begehen muss. Sollte dies bei dir nicht der Fall gewesen sein, so hast du sehr großes Glück gehabt. Wiederhole das Experiment mit einem anderen Labyrinth.
+</div>
+
+<div class="panel panel-primary">
+	<div class="panel-heading"><h4>Algorithmus 'Im Labyrinth'</h4></div>
+
+	Das bisherige Vorgehen können wir algorithmisch so beschreiben:
+
+	<pre>
+solange nicht am Ausgang 
+	falls es ein angrenzendes, nicht markiertes Feld gibt 
+		bewege den Helden auf dieses Feld und markiere es 
+	sonst 
+		bewege den Helden auf ein angrenzendes, markiertes Feld
+	</pre>
+
+	Wenn man nur noch markierte Felder um sich hat, ist man auf dem Holzweg. Man will umkehren. Das ist im obigen Algorithmus allerdings so noch nicht präzisiert. Man möchte also bis zur nächsten Kreuzung zurückgehen. Wenn dort auch schon alle Felder markiert sind, möchte man noch weiter zurück usw. Um 'zurück' zu gehen, muss man immer wissen, wo man her kam.
+</div>
+
+<div class="panel">
+	<div class="panel-heading"><h4>Der Faden</h4></div>
+
+	In der griechischen Sage hat eine kluge Frau (<a href="http://de.wikipedia.org/wiki/Ariadne">Ariadne</a>) einem wahren Helden (<a href="http://de.wikipedia.org/wiki/Theseus">Theseus</a>) erklärt, wie das geht: Man spult einfach einen Faden, den <a href="http://de.wikipedia.org/wiki/Ariadnefaden">Ariadne-Faden</a> ab.
+</div>
+
+<div class="panel">
+	<p>
+		Hier kannst du den Helden beobachten, wie er mit Kreide und Faden ganz systematisch aus dem Labyrinth findet. Der Ariadne-Faden ist durch die schwarzen Punkte dargestellt.
+	</p>
+
+	<canvas id="experiment-labyrinth-string" class="labyrinth">
+	</canvas>
+
+	<p>
+		<a class="btn btn-primary" id="experiment-labyrinth-string-start"><i class="icon-play icon-white"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-string-stop"><i class="icon-stop icon-white"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-string-reset"><i class="icon-repeat"></i> Neu</a>
+	</p>
+</div>
+
+<h3 id="prinzip">Prinzip</h3>
+
+<h3 id="damen">Damen</h3>
+
+<h3 id="quinto">Quinto</h3>
+
+<h3 id="about" class="module-about">Über das Modul</h3>
 
 <ul>
 	<li>Algorithmus zum erstellen des Labyrinths: <a href="http://en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_Prim.27s_algorithm">Prim Algorithmus</a></li>
