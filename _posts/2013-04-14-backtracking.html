@@ -150,24 +150,183 @@ solange nicht am Ausgang
 	<div class="row">
 		<div class="col-span-6">
 			<ul class="answer-drag list-unstyled" id="answer-drag-labyrinth">
-				<li class="answer-labyrinth-item" data-answer="2">Oben</li>
-				<li class="answer-labyrinth-item" data-answer="1">Rechts</li>
-				<li class="answer-labyrinth-item" data-answer="3">Links</li>
-				<li class="answer-labyrinth-item" data-answer="4">Unten</li>
+				<li class="answer-item" data-answer="2">Oben</li>
+				<li class="answer-item" data-answer="1">Rechts</li>
+				<li class="answer-item" data-answer="3">Links</li>
+				<li class="answer-item" data-answer="4">Unten</li>
 			</ul>
 		</div>
 		<div class="col-span-6">
 			<ul class="question-drop list-unstyled" id="question-drop-labyrinth">
-				<li class="question-labyrinth-item" data-question="1">Zuerst</li>
-				<li class="question-labyrinth-item" data-question="2">danach</li>
-				<li class="question-labyrinth-item" data-question="3">danach</li>
-				<li class="question-labyrinth-item" data-question="4">zuletzt</li>
+				<li class="question-item" data-question="1">Zuerst</li>
+				<li class="question-item" data-question="2">danach</li>
+				<li class="question-item" data-question="3">danach</li>
+				<li class="question-item" data-question="4">zuletzt</li>
 			</ul>
 		</div>
 	</div>
 </div>
 
+<div class="panel">
+	<div class="panel-heading"><h4>Selbst mit Faden</h4></div>
+
+	<canvas id="experiment-labyrinth-manual-string" class="labyrinth">
+	</canvas>
+
+	<p>
+		<a class="btn btn-primary" id="experiment-labyrinth-manual-string-start"><i class="icon-play icon-white"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-manual-string-stop"><i class="icon-stop icon-white"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-manual-string-reset"><i class="icon-repeat"></i> Neu</a>
+	</p>
+</div>
+
+<div class="panel">
+	In unserer Darstellung wickelt der Held den Faden wieder auf, wenn er zurück geht. Wenn er das nicht tut, kann er auf die Kreide verzichten, denn besuchte Felder erkennt er dann daran, dass dort der Faden liegt. Das ist genau der originale Vorschlag Ariadnes aus der Sage.
+</div>
+
+<div class="panel panel-primary">
+	<div class="panel-heading"><h4>Algorithmus 'Zum Ausgang'</h4></div>
+
+	<pre>
+solange nicht am Ausgang 
+	falls es ein angrenzendes, nicht markiertes Feld gibt 
+		bewege den Helden auf dieses Feld und markiere es 
+	sonst 
+		bewege den Helden zurück auf das zuletzt begangene Feld
+	</pre>
+
+	Dieser Algorithmus ist ein erstes Beispiel für die Backtracking-Strategie. Im nächsten Abschnitt werden wir dieses Prinzip allgemein beschreiben. Beantworte zuvor noch folgende Frage.
+</div>
+
+<div class="panel panel-success">
+	<div class="panel-heading"><h4>Aufgabe</h4></div>
+
+	<p>
+		Wie oft wird jetzt jedes Feld maximal begangen?
+	</p>
+
+	<form class="form-horizontal" data-task="question" data-result="4" data-value="question-labyrinth-fields" data-check="quest-labyrinth-fields-check">
+		<div class="control-group control-result">
+			<label class="control-label" for="question-labyrinth-fields">Bitte Antwort eingeben</label>
+			<div class="controls">
+				<input class="input-with-feedback" type="number" min="1" max="99" id="question-labyrinth-fields" value="">
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<a class="btn btn-primary" id="quest-labyrinth-fields-check">Überprüfen</a>
+			</div>
+		</div>
+	</form>
+</div>
+
 <h3 id="prinzip">Prinzip</h3>
+
+<div class="panel">
+	<p>
+		Der bisherige Algorithmus verfährt nach dem Prinzip <code>wenn möglich vorwärts, sonst rückwärts</code>. Dieses Prinzip lässt sich auch bei vielen anderen Problemen anwenden.
+	</p>
+	
+	<h4>Voraussetzungen:</h4>
+	<ul>
+		<li>Das Problem lässt sich durch eine Folge von Entscheidungen lösen</li>
+		<li>Zu jedem Zeitpunkt stehen nur endlich viele Entscheidungen zur Wahl</li>
+		<li>Manchmal - aber nicht immer - ist sofort erkennbar, dass eine mögliche Entscheidung falsch ist</li>
+	</ul>
+</div>
+
+<div class="panel panel-primary">
+	<div class="panel-heading"><h4>Algorithmus 'Backtracking'</h4></div>
+
+	<p>
+		Nicht jede falsche Entscheidung ist sofort als eine solche erkennbar. Es ist z.B. falsch, in eine Sackgasse einzubiegen. Das erkennt man aber erst später, nämlich wenn man merkt, dass es nicht weiter geht. Man kann nun folgendermaßen eine zur Lösung führende Entscheidungsfolge aufbauen:
+	</p>
+
+	<pre>
+solange Lösung noch nicht gefunden 
+	falls es jetzt eine noch nicht probierte, \
+	mögliche Entscheidung gibt
+		falls diese nicht erkennbar falsch ist 
+			verlängere die Entscheidungsfolge um \
+			diese Entscheidung 
+			{'treffe die Entscheidung'} 
+	sonst
+		entferne die letzte Entscheidung aus der \
+		Entscheidungsfolge 
+		{'nimm die zuletzt getroffene Entscheidung zurück'}
+	</pre>
+
+	<p>
+		Beim Labyrinth ist die Zuordnung so:
+	</p>
+	<ul>
+		<li><strong>Entscheidung:</strong> Ein angrenzendes Feld, auf welches der Held bewegt wird. Je nachdem, wo sich der Held gerade befindet, gibt es bis zu vier mögliche Entscheidungen.</li>
+		<li><strong>Entscheidungsfolge:</strong> Eine Folge begangener, benachbarter Felder - also ein Weg - im Labyrinth.</li>
+		<li><strong>Erkennbar falsch</strong> ist eine Entscheidung, wenn sie auf ein bereits begangenes Feld führt.</li>
+		<li><strong>Lösung gefunden:</strong> aktuelles Feld ist der Ausgang.</li>
+	</ul>
+</div>
+
+<div class="panel panel-success">
+	<div class="panel-heading"><h4>Aufgabe</h4></div>
+
+	<p>
+		Gib in den folgenden Situationen an, wieviele Entscheidungen prinzipiell möglich und wieviele davon erkennbar falsch sind.
+	</p>
+
+	<form class="form-horizontal" data-task="question-group" data-check="quest-prinzip-fields-check">
+		<div class="control-group">
+			<label class="control-label"><img src="{{ site.url }}/img/backtracking/prinzip/question_group1.gif"></label>
+			<div class="controls">
+				Möglich: <br>
+				<input class="question-input" type="number" min="1" max="99" data-answer="3" value=""><br>
+				Davon falsch: <br>
+				<input class="question-input" type="number" min="1" max="99" data-answer="1" value="">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"><img src="{{ site.url }}/img/backtracking/prinzip/question_group2.gif"></label>
+			<div class="controls">
+				Möglich: <br>
+				<input class="question-input" type="number" min="1" max="99" data-answer="2" value=""><br>
+				Davon falsch: <br>
+				<input class="question-input" type="number" min="1" max="99" data-answer="1" value="">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"><img src="{{ site.url }}/img/backtracking/prinzip/question_group3.gif"></label>
+			<div class="controls">
+				Möglich: <br>
+				<input class="question-input" type="number" min="1" max="99" data-answer="1" value=""><br>
+				Davon falsch: <br>
+				<input class="question-input" type="number" min="1" max="99" data-answer="0" value="">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"><img src="{{ site.url }}/img/backtracking/prinzip/question_group4.gif"></label>
+			<div class="controls">
+				Möglich: <br>
+				<input class="question-input" type="number" min="1" max="99" data-answer="3" value=""><br>
+				Davon falsch: <br>
+				<input class="question-input" type="number" min="1" max="99" data-answer="3" value="">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"><img src="{{ site.url }}/img/backtracking/prinzip/question_group5.gif"></label>
+			<div class="controls">
+				Möglich: <br>
+				<input class="question-input" type="number" min="1" max="99" data-answer="3" value=""><br>
+				Davon falsch: <br>
+				<input class="question-input" type="number" min="1" max="99" data-answer="2" value="">
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<a class="btn btn-primary" id="quest-prinzip-fields-check">Überprüfen</a>
+			</div>
+		</div>
+	</form>
+</div>
 
 <h3 id="damen">Damen</h3>
 

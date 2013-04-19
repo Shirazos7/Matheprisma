@@ -547,10 +547,10 @@ function Maze(element, rowCount, type) {
 
 			//Reihenfolge: Rechts, oben, links, unten
 			//Erste freie Felder, sonst dem Faden entlang zurück
-			
+
 			if (next === false && this.canWalkTo(x, y, 'right') !== false && this.chalked(x, y, 'right') === false)
 				next = [x + 1, y];
-			
+
 			if (next === false && this.canWalkTo(x, y, 'up') !== false && this.chalked(x, y, 'up') === false)
 				next = [x, y - 1];
 
@@ -566,7 +566,7 @@ function Maze(element, rowCount, type) {
 				//Zurück
 				if (next === false && this.canWalkTo(x, y, 'right') !== false && this.stringed(x, y, 'right') === true)
 					next = [x + 1, y];
-				
+
 				if (next === false && this.canWalkTo(x, y, 'up') !== false && this.stringed(x, y, 'up') === true)
 					next = [x, y - 1];
 
@@ -580,7 +580,7 @@ function Maze(element, rowCount, type) {
 					//Start
 					if (next === false && this.canWalkTo(x, y, 'right') !== false)
 						next = [x + 1, y];
-					
+
 					if (next === false && this.canWalkTo(x, y, 'up') !== false)
 						next = [x, y - 1];
 
@@ -676,6 +676,14 @@ function Maze(element, rowCount, type) {
 
 			if (this.chalk) {
 				this.squares[xNext][yNext].chalked = true;
+			}
+
+			if (this.string) {
+				if (this.stringed(x, y, direction)) {
+					this.squares[x][y].string = false;
+				}
+
+				this.squares[xNext][yNext].string = true;
 			}
 
 			this.draw();
@@ -826,6 +834,7 @@ $(function() {
 	var eSmall = $('#experiment-labyrinth-small').get(0);
 	var eChalk = $('#experiment-labyrinth-chalk').get(0);
 	var eString = $('#experiment-labyrinth-string').get(0);
+	var eManualString = $('#experiment-labyrinth-manual-string').get(0);
 
 	if (eRandom.getContext) {
 		var eRandomMaze = MazeController.create(eRandom, 20, 'random');
@@ -881,5 +890,18 @@ $(function() {
 		eStringMaze.selectorReset = '#experiment-labyrinth-string-reset';
 
 		eStringMaze.init();
+	}
+
+	if (eManualString.getContext) {
+		var eManualStringMaze = MazeController.create(eManualString, 20, 'manual');
+		eManualStringMaze.torch = true;
+		eManualStringMaze.chalk = true;
+		eManualStringMaze.string = true;
+
+		eManualStringMaze.selectorStart = '#experiment-labyrinth-manual-string-start';
+		eManualStringMaze.selectorStop = '#experiment-labyrinth-manual-string-stop';
+		eManualStringMaze.selectorReset = '#experiment-labyrinth-manual-string-reset';
+
+		eManualStringMaze.init();
 	}
 });

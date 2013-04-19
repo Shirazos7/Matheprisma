@@ -7,7 +7,7 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
-	<body>
+	<body data-spy="scroll" data-target="#nav-submodules">
 		<header>
 			<div class="navbar">
 				<div class="container">
@@ -61,5 +61,9 @@
 		<script src="{{ site.url }}/js/underscore.min.js"></script>
 
 		<script src="{{ site.url }}/js/main.min.js"></script>
+
+		<script>
+			App.baseUrl = '{{ site.url }}';
+		</script>
 	</body>
 </html>
