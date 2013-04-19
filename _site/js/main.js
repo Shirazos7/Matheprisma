@@ -38,6 +38,71 @@ var App = {
 	}
 };
 
+function StackDisplay(element) {
+	this.element = element;
+	this.context = element.getContext('2d');
+
+	element.width = $(element).parent().width();
+	this.width = element.width;
+	this.height = element.height;
+
+	/**
+	 * Optionen
+	 */
+	this.colorBackground = 'rgb(255, 255, 255)';
+	this.colorItemDefault = 'rgb(150, 255, 150)';
+	this.colorItemTextDefault = 'black';
+	this.itemWidth = 100;
+	this.fontSize = 14;
+
+	this.stack = [];
+	this.currentLevel = 0;
+	this.itemsInRow = Math.round(this.width / (this.itemWidth + 10));
+
+	this.draw = function() {
+		var index = 0;
+		var indexStart;
+		indexStart = (this.stack.length <= this.itemsInRow) ? 0 : this.stack.length - this.itemsInRow;
+		console.log('start', indexStart);
+
+		this.context.fillStyle = this.colorBackground;
+		this.context.fillRect(0, 0, this.width, this.height);
+
+		for (var i = indexStart; i < this.stack.length; i++) {
+			var item = this.stack[i];
+			var x = index * (this.itemWidth + 10);
+			var y = 0;
+
+			this.context.fillStyle = item.colorBackground || this.colorItemDefault;
+			this.context.fillRect(x, y, this.itemWidth, this.height);
+
+			x += 4;
+			y += 4 + this.fontSize;
+			this.context.font = this.fontSize + 'px Arial';
+			this.context.fillStyle = item.colorText || this.colorItemTextDefault;
+			this.context.fillText('Level: ' + item.level, x, y);
+
+			index++;
+		}
+	};
+
+	this.push = function(item) {
+		this.currentLevel++;
+		item.level = this.currentLevel;
+		this.stack.push(item);
+
+		this.draw();
+	};
+
+	this.pop = function() {
+		this.currentLevel--;
+		var item = this.stack.pop();
+
+		this.draw();
+		return item;
+	};
+}
+
 $(function() {
 	$('.help').popover({
 		placement: 'top',

@@ -4,7 +4,10 @@ build:
 	@echo "Compiling stylesheets..."
 	@lessc --yui-compress css/main.less > css/main.css
 	@echo "Compiling javascripts..."
-	@uglifyjs ./js/main.js ./js/modules/backtracking.js -b -o ./js/main.min.js
+	@uglifyjs \
+		./js/main.js \
+		./js/modules/backtracking.js \
+		-b -o ./js/main.min.js
 	@echo "Creating static site..."
 	@jekyll --url http://127.0.0.1/uni/matheprisma-responsive/_site/
 	@echo "Done."

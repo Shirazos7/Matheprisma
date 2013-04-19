@@ -16,9 +16,9 @@ title: Backtracking
 	</canvas>
 
 	<p>
-		<a class="btn btn-primary" id="experiment-labyrinth-random-start"><i class="icon-play icon-white"></i> Start</a>
-		<a class="btn btn-danger disabled" id="experiment-labyrinth-random-stop"><i class="icon-stop icon-white"></i> Stop</a>
-		<a class="btn" id="experiment-labyrinth-random-reset"><i class="icon-repeat"></i> Neu</a>
+		<a class="btn btn-primary" id="experiment-labyrinth-random-start"><i class="glyphicon glyphicon-play glyphicon"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-random-stop"><i class="glyphicon glyphicon-stop glyphicon"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-random-reset"><i class="glyphicon glyphicon-repeat"></i> Neu</a>
 	</p>
 
 	<p>
@@ -38,9 +38,9 @@ title: Backtracking
 	</canvas>
 
 	<p>
-		<a class="btn btn-primary" id="experiment-labyrinth-manual-start"><i class="icon-play icon-white"></i> Start</a>
-		<a class="btn btn-danger disabled" id="experiment-labyrinth-manual-stop"><i class="icon-stop icon-white"></i> Stop</a>
-		<a class="btn" id="experiment-labyrinth-manual-reset"><i class="icon-repeat"></i> Neu</a>
+		<a class="btn btn-primary" id="experiment-labyrinth-manual-start"><i class="glyphicon glyphicon-play glyphicon"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-manual-stop"><i class="glyphicon glyphicon-stop glyphicon"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-manual-reset"><i class="glyphicon glyphicon-repeat"></i> Neu</a>
 	</p>
 </div>
 
@@ -68,9 +68,9 @@ title: Backtracking
 	</canvas>
 
 	<p>
-		<a class="btn btn-primary" id="experiment-labyrinth-small-start"><i class="icon-play icon-white"></i> Start</a>
-		<a class="btn btn-danger disabled" id="experiment-labyrinth-small-stop"><i class="icon-stop icon-white"></i> Stop</a>
-		<a class="btn" id="experiment-labyrinth-small-reset"><i class="icon-repeat"></i> Neu</a>
+		<a class="btn btn-primary" id="experiment-labyrinth-small-start"><i class="glyphicon glyphicon-play glyphicon"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-small-stop"><i class="glyphicon glyphicon-stop glyphicon"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-small-reset"><i class="glyphicon glyphicon-repeat"></i> Neu</a>
 	</p>
 </div>
 
@@ -91,9 +91,9 @@ title: Backtracking
 	</canvas>
 
 	<p>
-		<a class="btn btn-primary" id="experiment-labyrinth-chalk-start"><i class="icon-play icon-white"></i> Start</a>
-		<a class="btn btn-danger disabled" id="experiment-labyrinth-chalk-stop"><i class="icon-stop icon-white"></i> Stop</a>
-		<a class="btn" id="experiment-labyrinth-chalk-reset"><i class="icon-repeat"></i> Neu</a>
+		<a class="btn btn-primary" id="experiment-labyrinth-chalk-start"><i class="glyphicon glyphicon-play glyphicon"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-chalk-stop"><i class="glyphicon glyphicon-stop glyphicon"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-chalk-reset"><i class="glyphicon glyphicon-repeat"></i> Neu</a>
 	</p>
 
 	Klar, mit den Markierungen weiß man, wo man überall schon war. Um zu vermeiden, dass man im Kreis geht, versucht man immer, auf noch nicht markierte Felder zu gehen.
@@ -134,9 +134,9 @@ solange nicht am Ausgang
 	</canvas>
 
 	<p>
-		<a class="btn btn-primary" id="experiment-labyrinth-string-start"><i class="icon-play icon-white"></i> Start</a>
-		<a class="btn btn-danger disabled" id="experiment-labyrinth-string-stop"><i class="icon-stop icon-white"></i> Stop</a>
-		<a class="btn" id="experiment-labyrinth-string-reset"><i class="icon-repeat"></i> Neu</a>
+		<a class="btn btn-primary" id="experiment-labyrinth-string-start"><i class="glyphicon glyphicon-play glyphicon"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-string-stop"><i class="glyphicon glyphicon-stop glyphicon"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-string-reset"><i class="glyphicon glyphicon-repeat"></i> Neu</a>
 	</p>
 </div>
 
@@ -174,9 +174,9 @@ solange nicht am Ausgang
 	</canvas>
 
 	<p>
-		<a class="btn btn-primary" id="experiment-labyrinth-manual-string-start"><i class="icon-play icon-white"></i> Start</a>
-		<a class="btn btn-danger disabled" id="experiment-labyrinth-manual-string-stop"><i class="icon-stop icon-white"></i> Stop</a>
-		<a class="btn" id="experiment-labyrinth-manual-string-reset"><i class="icon-repeat"></i> Neu</a>
+		<a class="btn btn-primary" id="experiment-labyrinth-manual-string-start"><i class="glyphicon glyphicon-play glyphicon"></i> Start</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-manual-string-stop"><i class="glyphicon glyphicon-stop glyphicon"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-manual-string-reset"><i class="glyphicon glyphicon-repeat"></i> Neu</a>
 	</p>
 </div>
 
@@ -326,6 +326,97 @@ solange Lösung noch nicht gefunden
 			</div>
 		</div>
 	</form>
+</div>
+
+<div class="panel">
+	<div class="panel-heading"><h4>Rekursion</h4></div>
+
+	<p>
+		Das Backtracking-Prinzip lässt sich elegant als rekursiver Algorithmus formulieren und dann auch so implementieren.
+	</p>
+
+	<blockquote>
+		<p>
+			Ein rekursiver Algorithmus ist ein Algorithmus, der sich selbst wieder aufruft.
+		</p>
+	</blockquote>
+</div>
+
+<div class="panel panel-primary">
+	<div class="panel-heading"><h4>Algorithmus 'Backtracking Rekursiv'</h4></div>
+
+	<p>
+		EF bezeichnet eine Entscheidungsfolge. 
+	</p>
+
+	<pre>
+falls EF Lösung ist 
+	stop 
+sonst 
+	für alle jetzt möglichen Entscheidungen 
+		falls Entscheidung nicht erkennbar falsch 
+			verlängere Entscheidungsfolge EF \
+			um diese Entscheidung, 
+				(die verlängerte \
+				Entscheidungsfolge heiße EF') 
+			BacktrackingRek(EF')
+	</pre>
+
+	Der Algorithmus wird mit der leeren Entscheidungsfolge gestartet.
+</div>
+
+<div class="panel">
+	<div class="panel-heading"><h4>Der Stack</h4></div>
+
+	<p>
+		Bei Verwendung von Rekursion muss man sich keine Gedanken mehr darüber machen, wie man eine Entscheidung zurücknimmt: der Rechner organisiert dies von sich aus beim Verwalten der rekursiven Aufrufe.
+	</p>
+
+	<p>
+		Der Rechner verwaltet eine Datenstruktur <strong>Stack</strong> ('Stapel').
+	</p>
+
+	<ul>
+		<li>Bei jedem rekursiven Aufruf werden die aktuellen Parameter auf den Stapel gelegt ('gemerkt').</li>
+		<li>Nach Rückkehr ('return') von einem rekursiven Aufruf werden die dann aktuellen Parameter wieder vom Stack eingelesen.</li>
+	</ul>
+</div>
+
+<div class="panel panel-success">
+	<div class="panel-heading"><h4>Der Stack</h4></div>
+
+	<canvas id="experiment-labyrinth-stack-display">
+	</canvas>
+
+	<div class="row">
+		<div class="col-span-4">
+			<canvas id="experiment-labyrinth-stack" class="labyrinth">
+			</canvas>
+		</div>
+
+		<div class="col-span-8">
+			<div id="experiment-labyrinth-stack-algorithm">
+				<ul class="algorithm" class="list-unstyled">
+					<li data-line="1"><strong>ZumAusgangRekursiv(EF)</strong></li>
+					<li data-line="2">&nbsp;&nbsp;&nbsp;&nbsp;<code>falls</code> EF = Lösung</li>
+					<li data-line="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>stop</code></li>
+					<li data-line="4">&nbsp;&nbsp;&nbsp;&nbsp;<code>sonst</code></li>
+					<li data-line="5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>bestimme</code> die Menge M der möglichen Richtungen</li>
+					<li data-line="6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>für alle</code>Richtungen X aus M</li>
+					<li data-line="7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>falls Feld in Richtung X nicht besucht</code></li>
+					<li data-line="9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ZumAusgangRekursiv(EF + X)</li>
+					<li data-line="1"><code>return</code></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<p>
+		<a class="btn btn-primary" id="experiment-labyrinth-stack-start"><i class="glyphicon glyphicon-play"></i> Start</a>
+		<a class="btn btn-info" id="experiment-labyrinth-stack-step"><i class="glyphicon glyphicon-step-forward"></i> Nächster Schritt</a>
+		<a class="btn btn-danger disabled" id="experiment-labyrinth-stack-stop"><i class="glyphicon glyphicon-stop"></i> Stop</a>
+		<a class="btn" id="experiment-labyrinth-stack-reset"><i class="glyphicon glyphicon-repeat"></i> Neu</a>
+	</p>
 </div>
 
 <h3 id="damen">Damen</h3>
