@@ -791,6 +791,13 @@ var Maze = Backbone.Model.extend({
 	start: function() {
 		var _this = this;
 
+		//Setze Stack zurück wenn das Programm neu gestartet wurde
+		if (this.get('status') === 'reset') {
+			if (this.get('stack') !== false) {
+				this.get('stack').reset();
+			}
+		}
+
 		if (this.get('status') !== 'start') {
 			switch (this.get('type')) {
 				case 'random':
@@ -877,6 +884,15 @@ var Maze = Backbone.Model.extend({
 			status: 'finish'
 		});
 
+		if (this.get('selectorStart') !== false)
+			$(this.get('selectorStart')).addClass('disabled');
+
+		if (this.get('selectorStep') !== false)
+			$(this.get('selectorStep')).addClass('disabled');
+
+		if (this.get('selectorStop') !== false)
+			$(this.get('selectorStop')).addClass('disabled');
+
 		this.draw();
 		Mazes.unbindKeys();
 	},
@@ -891,35 +907,34 @@ var Maze = Backbone.Model.extend({
 
 			Mazes.unbindKeys();
 
-			if (this.get('selectorStart'))
+			if (this.get('selectorStart') !== false)
 				$(this.get('selectorStart')).removeClass('disabled');
 
-			if (this.get('selectorStep'))
+			if (this.get('selectorStep') !== false)
 				$(this.get('selectorStep')).removeClass('disabled');
 
-			if (this.get('selectorStop'))
+			if (this.get('selectorStop') !== false)
 				$(this.get('selectorStop')).addClass('disabled');
 		}
 	},
 
 	reset: function() {
-		if (this.get('status') !== 'reset') {
-			this.trigger('reset', this);
+		console.log('reset', this.id);
+		this.trigger('reset', this);
 
-			this.initialize();
-			this.set({
-				status: 'reset'
-			});
+		this.init();
+		this.set({
+			status: 'reset'
+		});
 
-			if (this.get('selectorStart'))
-				$(this.get('selectorStart')).removeClass('disabled');
+		if (this.get('selectorStart') !== false)
+			$(this.get('selectorStart')).removeClass('disabled');
 
-			if (this.get('selectorStep'))
-				$(this.get('selectorStep')).removeClass('disabled');
+		if (this.get('selectorStep') !== false)
+			$(this.get('selectorStep')).removeClass('disabled');
 
-			if (this.get('selectorStop'))
-				$(this.get('selectorStop')).addClass('disabled');
-		}
+		if (this.get('selectorStop') !== false)
+			$(this.get('selectorStop')).addClass('disabled');
 	},
 
 	init: function() {
@@ -1108,7 +1123,7 @@ $(function() {
 			type: 'backtracking',
 			chalk: true,
 			string: true,
-			stack: new StackDisplay($('#experiment-labyrinth-stack-display').get(0)),
+			stack: new StackView($('#experiment-labyrinth-stack-display').get(0)),
 			speed: 1000,
 			selectorStart: '#experiment-labyrinth-stack-start',
 			selectorStep: '#experiment-labyrinth-stack-step',

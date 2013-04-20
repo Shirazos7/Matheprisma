@@ -47,7 +47,7 @@ var App = {
 	}
 };
 
-function StackDisplay(element) {
+function StackView(element) {
 	this.element = element;
 	this.context = element.getContext('2d');
 
@@ -145,6 +145,11 @@ function StackDisplay(element) {
 
 		this.stack.push(item);
 
+		this.draw();
+	};
+
+	this.reset = function() {
+		this.stack = [];
 		this.draw();
 	};
 }
