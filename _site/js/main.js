@@ -35,6 +35,15 @@ var App = {
 	error: function(element, message, prepend) {
 		if (!prepend) prepend = false;
 		this.alert(element, message, 'error', prepend);
+	},
+
+	sleep: function(milliseconds) {
+		var startTime = new Date().getTime();
+		while (new Date().getTime() < startTime + milliseconds) {
+			//Sleep
+		}
+
+		return true;
 	}
 };
 
@@ -59,11 +68,20 @@ function StackDisplay(element) {
 	this.currentLevel = 0;
 	this.itemsInRow = Math.round(this.width / (this.itemWidth + 10));
 
+	this.directionToChar = function(direction) {
+		switch (direction) {
+			case 'up': return 'O';
+			case 'right': return 'R';
+			case 'down': return 'U';
+			case 'left': return 'L';
+		}
+	};
+
 	this.draw = function() {
 		var index = 0;
 		var indexStart;
+		var j;
 		indexStart = (this.stack.length <= this.itemsInRow) ? 0 : this.stack.length - this.itemsInRow;
-		console.log('start', indexStart);
 
 		this.context.fillStyle = this.colorBackground;
 		this.context.fillRect(0, 0, this.width, this.height);
@@ -72,15 +90,30 @@ function StackDisplay(element) {
 			var item = this.stack[i];
 			var x = index * (this.itemWidth + 10);
 			var y = 0;
+			var efText = 'EF: ';
+			var mText = 'M: ';
 
 			this.context.fillStyle = item.colorBackground || this.colorItemDefault;
 			this.context.fillRect(x, y, this.itemWidth, this.height);
-
-			x += 4;
-			y += 4 + this.fontSize;
 			this.context.font = this.fontSize + 'px Arial';
 			this.context.fillStyle = item.colorText || this.colorItemTextDefault;
-			this.context.fillText('Level: ' + item.level, x, y);
+
+			x += 4;
+
+			y += 4 + this.fontSize;
+			for (j = 0; j < i; j++) {
+				efText += this.directionToChar(this.stack[j].x) + ' ';
+			}
+			this.context.fillText(efText, x, y);
+
+			y += 4 + this.fontSize;
+			for (j = 0; j < item.m.length; j++) {
+				mText += this.directionToChar(item.m[j]) + ' ';
+			}
+			this.context.fillText(mText, x, y);
+
+			y += 4 + this.fontSize;
+			this.context.fillText('X: ' + this.directionToChar(item.x), x, y);
 
 			index++;
 		}
@@ -100,6 +133,20 @@ function StackDisplay(element) {
 
 		this.draw();
 		return item;
+	};
+
+	this.removeDirection = function(direction) {
+		console.log('Remove direction', direction);
+		var item = this.stack.pop();
+
+		//Lösche bereits durchlaufende Richtungen
+		item.m = _.reject(item.m, function(itemDirection) {
+			return (itemDirection == direction);
+		});
+
+		this.stack.push(item);
+
+		this.draw();
 	};
 }
 

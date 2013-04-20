@@ -32,7 +32,7 @@ var Maze = Backbone.Model.extend({
 	defaults: {
 		element: null, //Canvas Element
 		context: null, //Canvas
-		squareSize: null, //Größe der Quadrate in Pixeln
+		squareSize: null, //Größe der Quadrate in Pixeln, wird automatisch berechnet
 
 		/**
 		 * Aktueller Status des Labyrinths:
@@ -71,19 +71,20 @@ var Maze = Backbone.Model.extend({
 		stack: false, //False oder ein StackDisplay Object
 		speed: 150, //Laufgeschwindigkeit in Millisekunden
 
-		squares: [],
-		player: [0, 0],
-		end: [0, 0],
+		squares: [], //Mehrdimensionales Array mit den Koordinaten des Spielfelds
+		player: [0, 0], //Position des Spielers
+		end: [0, 0], //Ziel
+		stackFrom: '', //Letzte Richtung
 
 		selectorStart: false,
 		selectorStep: false,
 		selectorStop: false,
 		selectorReset: false,
 
-		keyUp: 38,
-		keyRight: 39,
-		keyDown: 40,
-		keyLeft: 37
+		keyUp: 38, //Pfeil oben
+		keyRight: 39, //Pfeil rechts
+		keyDown: 40, //Pfeil unten
+		keyLeft: 37 //Pfeil links
 	},
 
 	createEnd: function() {
@@ -372,19 +373,15 @@ var Maze = Backbone.Model.extend({
 	firstWalk: function(x, y) {
 		var squares = this.get('squares');
 
-		//Top
 		if (squares[x][y - 1].bottom === false)
 			return [x, y - 1, 'up'];
 
-		//Right
 		if (squares[x + 1][y].left === false)
 			return [x + 1, y, 'right'];
 
-		//Bottom
 		if (squares[x][y + 1].top === false)
 			return [x, y + 1, 'down'];
 
-		//Left
 		if (squares[x - 1][y].right === false)
 			return [x - 1, y, 'left'];
 
@@ -492,7 +489,7 @@ var Maze = Backbone.Model.extend({
 		var directions = _.shuffle([0, 1, 2, 3]);
 		var i = 0;
 
-		//Check possibilities
+		//Möglichkeiten per Zufall durchsuchen
 		for (i = 0; i < 4; i++) {
 			switch (directions[i]) {
 				case 0:
@@ -514,12 +511,13 @@ var Maze = Backbone.Model.extend({
 			}
 		}
 
-		//Random choice, not where the player comes from
+		//Falls Möglichkeit in die gleiche Richtung zu laufen
 		for (i = 0; i < possibilities.length; i++) {
 			if (possibilities[i][2] !== this.oppositeDirection(to))
 				return possibilities[i];
 		}
 
+		//Gehe in die erstbeste Richtung
 		if (possibilities.length > 0)
 			return possibilities[0];
 		else
@@ -568,6 +566,11 @@ var Maze = Backbone.Model.extend({
 		}
 	},
 
+	/**
+	 * Das Labyrinth per Backtracking lösen.
+	 * 
+	 * Das Backtracking ist nur simuliert da JavaScript kein echtes sleep() bietet.
+	 */
 	walkBacktracking: function() {
 		if (this.get('status') === 'start' || this.get('status') === 'step') {
 			var _this = this;
@@ -577,15 +580,15 @@ var Maze = Backbone.Model.extend({
 			var string = false;
 			var end = this.get('end');
 			var squares = this.get('squares');
+			var m = [];
 
+			//Ziel
 			if (x === end[0] && y === end[1]) {
 				this.finish();
 				return;
 			}
 
-			//Reihenfolge: Rechts, oben, links, unten
-			//Erste freie Felder, sonst dem Faden entlang zurück
-
+			//Freies Feld
 			if (next === false && this.canWalkTo(x, y, 'right') !== false && this.chalked(x, y, 'right') === false)
 				next = [x + 1, y, 'right'];
 
@@ -634,45 +637,64 @@ var Maze = Backbone.Model.extend({
 				}
 			}
 
-			if (next !== false) {
-				if (string === true) {
-					squares[next[0]][next[1]].string = true;
-
-					if (this.get('stack') !== false) {
-						this.get('stack').push({
-							direction: next[2]
-						});
-					}
-				} else {
-					squares[x][y].string = false;
-
-					if (this.get('stack') !== false) {
-						this.get('stack').pop();
-					}
-				}
-
-				if (this.get('chalk')) {
-					squares[next[0]][next[1]].chalked = true;
-				}
-
-				this.set({
-					player: [next[0], next[1]]
-				});
-				this.draw();
-			} else {
+			if (next === false)
 				return;
+
+			//Ermittel Möglichke Richtungen M
+			if (this.canWalkTo(next[0], next[1], 'right') !== false)
+				m.push('right');
+
+			if (this.canWalkTo(next[0], next[1], 'up') !== false)
+				m.push('up');
+
+			if (this.canWalkTo(next[0], next[1], 'left') !== false)
+				m.push('left');
+
+			if (this.canWalkTo(next[0], next[1], 'down') !== false)
+				m.push('down');
+
+			if (string === true) {
+				//Setze Faden
+				squares[next[0]][next[1]].string = true;
+
+				//Füge neues Element zu dem Stack hinzu
+				if (this.get('stack') !== false) {
+					this.get('stack').push({
+						m: m,
+						x: next[2]
+					});
+				}
+			} else {
+				//Entferne Faden von dem alten Feld
+				squares[x][y].string = false;
+
+				if (this.get('stack') !== false) {
+					//Lösche letztes Element aus dem Stack
+					this.get('stack').pop();
+					this.get('stack').removeDirection(this.oppositeDirection(next[2]));
+				}
 			}
+
+			//Nächstes Feld mit Kreide markieren
+			if (this.get('chalk')) {
+				squares[next[0]][next[1]].chalked = true;
+			}
+
+			//Neue Spielerposition
+			this.set({
+				player: [next[0], next[1]]
+			});
+
+			this.draw();
 
 			if (this.get('status') === 'start') {
 				setTimeout(function() {
 					_this.walkBacktracking();
 				}, this.get('speed'));
-			} else {
-				return;
 			}
-		} else {
-			return;
 		}
+
+		return;
 	},
 
 	walk: function(direction) {
@@ -727,6 +749,8 @@ var Maze = Backbone.Model.extend({
 		}
 
 		if (canWalk) {
+			this.trigger('walk', [this, xNext, yNext]);
+
 			player[0] = xNext;
 			player[1] = yNext;
 
@@ -767,114 +791,138 @@ var Maze = Backbone.Model.extend({
 	start: function() {
 		var _this = this;
 
-		switch (this.get('type')) {
-			case 'random':
-				this.set({
-					status: 'start'
-				});
-				this.walkRandom(null);
-				break;
-			case 'manual':
-				Mazes.stopAll();
+		if (this.get('status') !== 'start') {
+			switch (this.get('type')) {
+				case 'random':
+					this.trigger('start', this);
 
-				this.set({
-					status: 'start'
-				});
+					this.set({
+						status: 'start'
+					});
+					this.walkRandom(null);
+					break;
+				case 'manual':
+					this.trigger('start', this);
 
-				$('body').keydown(function(e) {
-					switch (e.keyCode) {
-						case _this.get('keyUp'):
-							_this.walkUp();
-							break;
-						case _this.get('keyRight'):
-							_this.walkRight();
-							break;
-						case _this.get('keyDown'):
-							_this.walkDown();
-							break;
-						case _this.get('keyLeft'):
-							_this.walkLeft();
-							break;
-					}
+					Mazes.stopAll();
 
-					if (e.keyCode === _this.get('keyUp') ||
-						e.keyCode === _this.get('keyRight') ||
-						e.keyCode === _this.get('keyDown') ||
-						e.keyCode === _this.get('keyLeft')) {
+					this.set({
+						status: 'start'
+					});
 
-						e.preventDefault();
-						return false;
-					}
-				});
-				break;
-			case 'backtracking':
-				this.set({
-					status: 'start'
-				});
-				this.walkBacktracking();
-				break;
+					$('body').keydown(function(e) {
+						switch (e.keyCode) {
+							case _this.get('keyUp'):
+								_this.walkUp();
+								break;
+							case _this.get('keyRight'):
+								_this.walkRight();
+								break;
+							case _this.get('keyDown'):
+								_this.walkDown();
+								break;
+							case _this.get('keyLeft'):
+								_this.walkLeft();
+								break;
+						}
+
+						if (e.keyCode === _this.get('keyUp') ||
+							e.keyCode === _this.get('keyRight') ||
+							e.keyCode === _this.get('keyDown') ||
+							e.keyCode === _this.get('keyLeft')) {
+
+							e.preventDefault();
+							return false;
+						}
+					});
+					break;
+				case 'backtracking':
+					this.trigger('start', this);
+
+					this.set({
+						status: 'start'
+					});
+
+					this.walkBacktracking();
+					break;
+			}
+
+			if (this.get('selectorStart'))
+				$(this.get('selectorStart')).addClass('disabled');
+
+			if (this.get('selectorStep'))
+				$(this.get('selectorStep')).addClass('disabled');
+
+			if (this.get('selectorStop'))
+				$(this.get('selectorStop')).removeClass('disabled');
 		}
-
-		if (this.get('selectorStart'))
-			$(this.get('selectorStart')).addClass('disabled');
-
-		if (this.get('selectorStep'))
-			$(this.get('selectorStep')).addClass('disabled');
-
-		if (this.get('selectorStop'))
-			$(this.get('selectorStop')).removeClass('disabled');
 	},
 
 	step: function() {
-		this.set({
-			status: 'step'
-		});
+		if (this.get('status') !== 'start') {
+			this.trigger('step', this);
 
-		this.walkBacktracking();
+			this.set({
+				status: 'step'
+			});
+
+			this.walkBacktracking();
+		}
 	},
 
 	finish: function() {
+		this.trigger('finish', this);
+
 		this.set({
 			status: 'finish'
 		});
+
 		this.draw();
 		Mazes.unbindKeys();
 	},
 
 	stop: function() {
-		this.set({
-			status: 'stop'
-		});
+		if (this.get('status') !== 'stop') {
+			this.trigger('stop', this);
 
-		Mazes.unbindKeys();
+			this.set({
+				status: 'stop'
+			});
 
-		if (this.get('selectorStart'))
-			$(this.get('selectorStart')).removeClass('disabled');
+			Mazes.unbindKeys();
 
-		if (this.get('selectorStep'))
-			$(this.get('selectorStep')).removeClass('disabled');
+			if (this.get('selectorStart'))
+				$(this.get('selectorStart')).removeClass('disabled');
 
-		if (this.get('selectorStop'))
-			$(this.get('selectorStop')).addClass('disabled');
+			if (this.get('selectorStep'))
+				$(this.get('selectorStep')).removeClass('disabled');
+
+			if (this.get('selectorStop'))
+				$(this.get('selectorStop')).addClass('disabled');
+		}
 	},
 
 	reset: function() {
-		this.initialize();
-		this.set({
-			status: 'reset'
-		});
+		if (this.get('status') !== 'reset') {
+			this.trigger('reset', this);
 
-		if (this.get('selectorStart'))
-			$(this.get('selectorStart')).removeClass('disabled');
+			this.initialize();
+			this.set({
+				status: 'reset'
+			});
 
-		if (this.get('selectorStep'))
-			$(this.get('selectorStep')).removeClass('disabled');
+			if (this.get('selectorStart'))
+				$(this.get('selectorStart')).removeClass('disabled');
 
-		if (this.get('selectorStop'))
-			$(this.get('selectorStop')).addClass('disabled');
+			if (this.get('selectorStep'))
+				$(this.get('selectorStep')).removeClass('disabled');
+
+			if (this.get('selectorStop'))
+				$(this.get('selectorStop')).addClass('disabled');
+		}
 	},
 
-	initialize: function() {
+	init: function() {
 		var _this = this;
 		var top = true;
 		var right = true;
@@ -911,6 +959,14 @@ var Maze = Backbone.Model.extend({
 		this.setPlayer();
 		this.createMaze();
 
+		this.draw();
+	},
+
+	initialize: function() {
+		var _this = this;
+
+		this.init();
+
 		//Set controls
 		if (this.get('selectorStart') !== false) {
 			$(this.get('selectorStart')).on('click', function() {
@@ -943,6 +999,30 @@ var Maze = Backbone.Model.extend({
 var MazeController = Backbone.Collection.extend({
 	model: Maze,
 
+	initialize: function() {
+		console.log('Initialize Maze collection.');
+
+		this.on('start', function(model) {
+			console.log('Start maze:', model.id);
+		});
+
+		this.on('step', function(model) {
+			console.log('Step maze:', model.id);
+		});
+
+		this.on('stop', function(model) {
+			console.log('Stop maze:', model.id);
+		});
+
+		this.on('reset', function(model) {
+			console.log('Reset maze:', model.id);
+		});
+
+		this.on('finish', function(model) {
+			console.log('Finished maze:', model.id);
+		});
+	},
+
 	stopAll: function() {
 		this.forEach(function(model) {
 			model.stop();
@@ -957,59 +1037,39 @@ var MazeController = Backbone.Collection.extend({
 var Mazes = new MazeController();
 
 $(function() {
-	var eRandom = $('#experiment-labyrinth-random').get(0);
-	var eManual = $('#experiment-labyrinth-manual').get(0);
-	var eSmall = $('#experiment-labyrinth-small').get(0);
-	var eChalk = $('#experiment-labyrinth-chalk').get(0);
-	var eString = $('#experiment-labyrinth-string').get(0);
-	var eManualString = $('#experiment-labyrinth-manual-string').get(0);
-	var eStack = $('#experiment-labyrinth-stack').get(0);
-	var eStackDisplay = $('#experiment-labyrinth-stack-display').get(0);
-
-	var eRandomMaze;
-
-	if (eRandom.getContext) {
-		Mazes.add([{
+	Mazes.add([
+		{
 			id: 'random',
-			element: eRandom,
+			element: $('#experiment-labyrinth-random').get(0),
 			rowCount: 20,
 			type: 'random',
 			selectorStart: '#experiment-labyrinth-random-start',
 			selectorStop: '#experiment-labyrinth-random-stop',
 			selectorReset: '#experiment-labyrinth-random-reset'
-		}]);
-	}
-
-	if (eManual.getContext) {
-		Mazes.add([{
+		},
+		{
 			id: 'manual',
-			element: eManual,
+			element: $('#experiment-labyrinth-manual').get(0),
 			rowCount: 20,
 			type: 'manual',
 			torch: true,
 			selectorStart: '#experiment-labyrinth-manual-start',
 			selectorStop: '#experiment-labyrinth-manual-stop',
 			selectorReset: '#experiment-labyrinth-manual-reset'
-		}]);
-	}
-
-	if (eSmall.getContext) {
-		Mazes.add([{
+		},
+		{
 			id: 'manual-small',
-			element: eSmall,
+			element: $('#experiment-labyrinth-small').get(0),
 			rowCount: 15,
 			type: 'manual',
 			torch: true,
 			selectorStart: '#experiment-labyrinth-small-start',
 			selectorStop: '#experiment-labyrinth-small-stop',
 			selectorReset: '#experiment-labyrinth-small-reset'
-		}]);
-	}
-
-	if (eChalk.getContext) {
-		Mazes.add([{
+		},
+		{
 			id: 'chalk',
-			element: eChalk,
+			element: $('#experiment-labyrinth-chalk').get(0),
 			rowCount: 20,
 			type: 'manual',
 			torch: true,
@@ -1017,13 +1077,10 @@ $(function() {
 			selectorStart: '#experiment-labyrinth-chalk-start',
 			selectorStop: '#experiment-labyrinth-chalk-stop',
 			selectorReset: '#experiment-labyrinth-chalk-reset'
-		}]);
-	}
-
-	if (eString.getContext) {
-		Mazes.add([{
+		},
+		{
 			id: 'string',
-			element: eString,
+			element: $('#experiment-labyrinth-string').get(0),
 			rowCount: 20,
 			type: 'backtracking',
 			chalk: true,
@@ -1031,13 +1088,10 @@ $(function() {
 			selectorStart: '#experiment-labyrinth-string-start',
 			selectorStop: '#experiment-labyrinth-string-stop',
 			selectorReset: '#experiment-labyrinth-string-reset'
-		}]);
-	}
-
-	if (eManualString.getContext) {
-		Mazes.add([{
+		},
+		{
 			id: 'manual-string',
-			element: eManualString,
+			element: $('#experiment-labyrinth-manual-string').get(0),
 			rowCount: 20,
 			type: 'manual',
 			torch: true,
@@ -1046,18 +1100,15 @@ $(function() {
 			selectorStart: '#experiment-labyrinth-manual-string-start',
 			selectorStop: '#experiment-labyrinth-manual-string-stop',
 			selectorReset: '#experiment-labyrinth-manual-string-reset'
-		}]);
-	}
-
-	if (eStack.getContext && eStackDisplay.getContext) {
-		Mazes.add([{
+		},
+		{
 			id: 'stack',
-			element: eStack,
+			element: $('#experiment-labyrinth-stack').get(0),
 			rowCount: 6,
 			type: 'backtracking',
 			chalk: true,
 			string: true,
-			stack: new StackDisplay(eStackDisplay),
+			stack: new StackDisplay($('#experiment-labyrinth-stack-display').get(0)),
 			speed: 1000,
 			selectorStart: '#experiment-labyrinth-stack-start',
 			selectorStep: '#experiment-labyrinth-stack-step',
@@ -1065,6 +1116,6 @@ $(function() {
 			selectorReset: '#experiment-labyrinth-stack-reset',
 			selectorStack: '#experiment-labyrinth-stack-display',
 			selectorAlgorithm: '#experiment-labyrinth-stack-algorithm'
-		}]);
-	}
+		}
+	]);
 });
