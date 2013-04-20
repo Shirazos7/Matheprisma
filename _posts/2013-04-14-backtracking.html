@@ -421,6 +421,40 @@ sonst
 
 <h3 id="damen">Damen</h3>
 
+<div class="panel">
+	<div class="panel-heading"><h4>Das N-Damen-Problem</h4></div>
+
+	<p>
+		Stelle 8 Damen so auf ein Schachbrett, dass keine Dame eine andere bedroht. Eine Dame kann horizontal, vertikal und diagonal schlagen.
+	</p>
+
+	<img src="{{ site.url }}img/backtracking/dame/beispiel.gif" class="img-rounded">
+</div>
+
+<div class="panel panel-success">
+	<div class="panel-heading"><h4>Versuche es selbst</h4></div>
+
+	<p>
+		Du kannst das Schachbrett auch verkleinern. Bei Größe n musst du n Damen auf einem n*n Schachbrett unterbringen. Ein Klick auf eine Dame entfernt sie wieder.
+	</p>
+
+	<div class="row">
+		<div class="input-group col-span-6">
+			<input type="number" min="2" max="20" value="8" id="experiment-dame-full-n" size="2">
+			<span class="input-group-btn">
+				<a class="btn btn-primary" id="experiment-dame-full-change">
+					<i class="glyphicon glyphicon-refresh"></i> Ändern
+				</a>
+			</span>
+		</div>
+	</div>
+
+	<p></p>
+
+	<canvas id="experiment-dame-full" class="dame">
+	</canvas>
+</div>
+
 <h3 id="quinto">Quinto</h3>
 
 <h3 id="about" class="module-about">Über das Modul</h3>

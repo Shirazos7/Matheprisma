@@ -6,7 +6,8 @@ build:
 	@echo "Compiling javascripts..."
 	@uglifyjs \
 		./js/main.js \
-		./js/modules/backtracking.js \
+		./js/modules/labyrinth.js \
+		./js/modules/dame.js \
 		-b -o ./js/main.min.js
 	@echo "Creating static site..."
 	@jekyll --url http://127.0.0.1/uni/matheprisma-responsive/_site/

@@ -954,10 +954,6 @@ var Maze = Backbone.Model.extend({
 		element.width = $(element).parent().width();
 		element.height = $(element).width();
 
-		this.set({
-			squareSize: (element.width / rowCount)
-		});
-
 		//Init fields
 		squares = [];
 		for (var x = 0; x < rowCount; x++) {
@@ -968,6 +964,7 @@ var Maze = Backbone.Model.extend({
 		}
 
 		this.set({
+			squareSize: (element.width / rowCount),
 			squares: squares
 		});
 
