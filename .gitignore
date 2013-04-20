@@ -1,4 +1,5 @@
 # Project files
 *.sublime-*
 
+_site/*
 config/*
